@@ -175,55 +175,56 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
         
     # Converter slug ou nome para ID numérico se necessário
     id_numerico = agent_id
+    tipo_agente = None  # Inicializar para uso posterior
     
-    # Mapeamento de slugs para IDs numéricos (conforme vimos na listagem de agentes)
-    slug_para_id = {
-        "e-mail-de-venda-Sxtjz8": "53",
-        "titulo-de-email-para-anuncio-de-novo-recurso-fDba8a": "52",
-        "e-mail-de-solicitacao-de-review-pos-venda-ihvlWw": "55",
-        "palavras-chave-para-campanha-de-marca-96zlo7": "59",
-        "palavras-chave-para-campanha-de-produtosservicos-egK882": "60",
-        "transformar-texto-em-post-para-linkedin-mF37hV": "67",
-        "ideias-de-anuncios-para-o-youtube-ads-RVm1a8": "68",
-        "roteiro-para-anuncio-de-video-no-youtube-ads-9pdCVJ": "69",
-        "multi-chat-S7C0WU": "3176",
-        "professional-dev-ai": "3238"
-    }
-    
-    # Verificar se o ID é um slug e convertê-lo
-    if agent_id in slug_para_id:
-        id_numerico = slug_para_id[agent_id]
-        if is_cli:
-            logger.info(f"Convertendo slug '{agent_id}' para ID numérico: {id_numerico}")
-    # Verificar se o ID é já um valor numérico
-    elif not agent_id.isdigit() and not agent_id.startswith(("agent-", "user-")):
-        # Se não está no mapeamento e não é um ID numérico, tentar buscar na lista de agentes
+    # Se não é um ID numérico, vamos buscar na API
+    if not agent_id.isdigit():
+        # Buscar de forma dinâmica na API
         try:
             success, data = listar_agentes(is_cli=False)
             if success:
                 encontrado = False
-                tipo_agente = ""  # Inicializar a variável para evitar erro
                 for agent in data.get('data', []):
-                    if agent.get('slug') == agent_id:
+                    # Verificar se bate com o slug ou contém o ID fornecido
+                    if (agent.get('slug') == agent_id or 
+                        agent.get('slug', '').startswith(agent_id) or 
+                        agent.get('slug', '').endswith(agent_id) or 
+                        agent_id in agent.get('slug', '')):
                         id_numerico = agent.get('id')
                         tipo_agente = agent.get('type', '')
                         encontrado = True
                         if is_cli:
                             logger.info(f"Encontrado na lista de agentes: '{agent_id}' = ID {id_numerico}, Tipo: {tipo_agente}")
                         break
+                    # Verificar também pelo título para maior flexibilidade
+                    elif agent_id.lower() in agent.get('title', '').lower():
+                        id_numerico = agent.get('id')
+                        tipo_agente = agent.get('type', '')
+                        encontrado = True
+                        if is_cli:
+                            logger.info(f"Encontrado pelo título: '{agent_id}' = ID {id_numerico}, Tipo: {tipo_agente}")
+                        break
                 
                 if not encontrado and is_cli:
-                    logger.warning(f"Slug '{agent_id}' não encontrado na lista de agentes - tentando usar diretamente")
+                    logger.warning(f"Agente '{agent_id}' não encontrado na lista de agentes - tentando usar diretamente")
         except Exception as e:
             if is_cli:
                 logger.error(f"Erro ao buscar lista de agentes: {e}")
-
+    
     # Configuração da requisição
     url = f'https://tess.pareto.io/api/agents/{id_numerico}/execute'
     
-    # Para agentes de chat, mantemos o mesmo endpoint mas usamos formato de parâmetros diferente
+    # Determinar se o agente é do tipo chat
     is_chat_agent = False
-    if agent_id.lower().startswith("chat-") or agent_id == "chat" or agent_id == "professional-dev-ai" or agent_id == "multi-chat-S7C0WU" or (tipo_agente and tipo_agente == "chat"):
+    
+    # Verificar se é um agente de chat com base no tipo ou no ID
+    if ((tipo_agente and tipo_agente.lower() == "chat") or
+        agent_id.lower().startswith("chat-") or 
+        agent_id == "chat" or 
+        agent_id == "professional-dev-ai" or 
+        agent_id == "multi-chat-S7C0WU" or 
+        id_numerico == "3238" or  # professional-dev-ai ID
+        id_numerico == "3176"):   # multi-chat ID
         is_chat_agent = True
         if is_cli:
             logger.info("Detectado um agente de chat, usando formato de mensagens compatível com chat")
@@ -240,70 +241,22 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
         # Dados base para a execução
         data = {}
         
-        # Adicionar parâmetros específicos baseado no tipo de agente
-        if agent_id == "e-mail-de-venda-Sxtjz8" or id_numerico == "53":
-            # Parâmetros para o agente de email de venda conforme documentação
-            data = {
-                "temperature": 0.5,
-                "model": "tess-ai-light",
-                "maxlength": 500,
-                "language": "Portuguese (Brazil)",
-                "nome-do-produto": "TESS AI",
-                "url-do-produto": "https://tess.pareto.io",
-                "diferenciais-do-produto": mensagem,
-                "waitExecution": True
-            }
-        elif agent_id == "titulo-de-email-para-anuncio-de-novo-recurso-fDba8a" or id_numerico == "52":
-            # Parâmetros para o agente de título de email
-            data = {
-                "temperature": 0.5,
-                "model": "tess-ai-light",
-                "maxlength": 500,
-                "language": "Portuguese (Brazil)",
-                "novo-recurso": "Integração com API via MCP",
-                "produto": "TESS AI",
-                "waitExecution": True
-            }
-        elif agent_id == "transformar-texto-em-post-para-linkedin-mF37hV" or id_numerico == "67":
-            # Parâmetros para o agente de post LinkedIn
-            data = {
-                "temperature": 0.5,
-                "model": "tess-ai-light",
-                "maxlength": 500,
-                "language": "Portuguese (Brazil)",
-                "texto": mensagem,
-                "waitExecution": True
-            }
-        elif agent_id == "ideias-de-anuncios-para-o-youtube-ads-RVm1a8" or id_numerico == "68":
-            # Parâmetros para o agente de ideias de anúncios para YouTube
-            data = {
-                "temperature": 1,
-                "model": "tess-ai-light",
-                "maxlength": 750,
-                "language": "Portuguese (Brazil)",
-                "tema-do-anuncio": mensagem,
-                "area-de-atucao-da-empresa": "Educação e Treinamento",
-                "publico-alvo": "Profissionais buscando aprimoramento em marketing digital",
-                "ocasiao-especial": "Lançamento do curso",
-                "descreva-o-produto-ou-servico": "Curso completo de marketing digital com conteúdo prático",
-                "company-name": "Academia de Marketing Digital",
-                "waitExecution": True
-            }
-        elif agent_id.lower().startswith("chat-") or agent_id == "chat" or agent_id == "professional-dev-ai" or agent_id == "multi-chat-S7C0WU" or (tipo_agente and tipo_agente == "chat"):
-            # Parâmetros para agentes do tipo chat no formato TESS
+        # Configurar parâmetros com base no tipo de agente
+        if is_chat_agent:
+            # Parâmetros para agentes do tipo chat
             modelo = "tess-5-pro"
             temperatura = "0.5"
             ferramentas = "no-tools"
             
-            # Configurações específicas para o multi-chat-S7C0WU com Claude
-            if agent_id == "multi-chat-S7C0WU":
+            # Configurações específicas para o multi-chat com Claude
+            if agent_id == "multi-chat-S7C0WU" or id_numerico == "3176":
                 modelo = "claude-3-7-sonnet-latest-thinking"
                 temperatura = "1"
                 if is_cli:
                     logger.info(f"Usando modelo específico: {modelo} com temperatura {temperatura}")
             
             # Configurações específicas para o professional-dev-ai com Claude
-            if agent_id == "professional-dev-ai":
+            if agent_id == "professional-dev-ai" or id_numerico == "3238":
                 modelo = "claude-3-7-sonnet-latest"
                 temperatura = "0"
                 ferramentas = "internet"
@@ -323,7 +276,7 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
             if is_cli:
                 logger.info("Executando no modo chat...")
         else:
-            # Caso genérico, usa o conteúdo da mensagem diretamente
+            # Caso genérico para outros tipos de agentes
             data = {
                 "temperature": 0.5,
                 "model": "tess-ai-light",
@@ -333,10 +286,29 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
                 "texto": mensagem,  # Adicionar texto como alternativa comum
                 "waitExecution": True
             }
-    
-    # Garantir que waitExecution esteja definido
-    if "waitExecution" not in data:
-        data["waitExecution"] = True
+            
+            # Para agentes específicos, tentar enriquecer os parâmetros
+            if id_numerico == "53" or "email-de-venda" in str(agent_id).lower():  # E-mail de venda
+                data.update({
+                    "nome-do-produto": "TESS AI",
+                    "url-do-produto": "https://tess.pareto.io",
+                    "diferenciais-do-produto": mensagem
+                })
+            elif id_numerico == "67" or "linkedin" in str(agent_id).lower():  # Post LinkedIn
+                data.update({
+                    "texto": mensagem
+                })
+            elif id_numerico == "68" or "youtube" in str(agent_id).lower():  # Anúncios YouTube
+                data.update({
+                    "temperature": 1,
+                    "maxlength": 750,
+                    "tema-do-anuncio": mensagem,
+                    "area-de-atucao-da-empresa": "Educação e Treinamento",
+                    "publico-alvo": "Profissionais buscando aprimoramento",
+                    "ocasiao-especial": "Lançamento do produto",
+                    "descreva-o-produto-ou-servico": "Produto inovador com benefícios únicos",
+                    "company-name": "Empresa Inovadora"
+                })
     
     if is_cli:
         logger.info(f'Executando agente TESS (ID: {id_numerico})...')

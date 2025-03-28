@@ -138,6 +138,9 @@ class MCPNLProcessor:
             # Novo: Capturar formato simplificado "agentes <keyword>" sem palavras de ligação
             (r'^(listar?|mostrar?|exibir?|ver?)?\s*(agentes?|templates?|modelos?)\s+(?P<keyword>[a-zA-Z0-9_\s-]{3,})$', 'listar_agentes_por_keyword'),
             
+            # Novo: Comando simplificado para executar agentes (executar <id> "mensagem")
+            (r'^executar\s+(?P<id>[a-zA-Z0-9_-]+)\s+[\"\'](?P<mensagem>.+)[\"\']$', 'executar_agente'),
+            
             # Executar agente TESS específico
             (r'(executar?|rodar?|usar?)\s+(o\s+)?(agente|template|modelo)\s+(do\s+)?(tess|tessai)\s+(?P<id>[a-zA-Z0-9_-]+)(\s+com\s+(mensagem|texto)\s+(?P<mensagem>[^$]+))?', 'executar_agente_tess'),
             
@@ -316,51 +319,72 @@ class MCPNLProcessor:
             return False, "", {}
     
     def processar_comando(self, tipo_comando: str, params: Dict[str, Any]) -> Optional[str]:
-        """Executa o processamento do comando detectado
-
+        """
+        Processa um comando detectado
+        
         Args:
             tipo_comando: Tipo de comando a ser processado
-            params: Parâmetros do comando
-
+            params: Parâmetros para o comando
+            
         Returns:
-            Texto de resposta ou None
+            Resposta formatada ou None se o comando não for reconhecido
         """
-        # Direcionar o processamento de acordo com o tipo de comando
-        if tipo_comando == "buscar_agentes":
+        # Comandos relacionados a ferramentas MCP
+        if tipo_comando == "listar_ferramentas":
+            return self._comando_listar_ferramentas(params)
+        elif tipo_comando == "executar_ferramenta":
+            return self._comando_executar_ferramenta(params)
+        elif tipo_comando == "configurar_mcp":
+            return self._comando_configurar_mcp(params)
+            
+        # Comandos relacionados ao TESS
+        elif tipo_comando == "buscar_agentes":
             return self._comando_buscar_agentes(params)
         elif tipo_comando == "buscar_agentes_por_tipo":
             return self._comando_buscar_agentes_por_tipo(params)
         elif tipo_comando == "buscar_agentes_por_tipo_e_termo":
             return self._comando_buscar_agentes_por_tipo_e_termo(params)
         elif tipo_comando == "executar_agente_tess":
-            agent_id = params.get("id", "")
-            mensagem = params.get("mensagem", "")
-            is_url = params.get("is_url", False)
+            # Extrair parâmetros
+            agent_id = params.get('id', '')
+            mensagem = params.get('mensagem', '')
+            is_url = params.get('is_url', False)
             return self._comando_executar_agente_tess(agent_id, mensagem, params, is_url)
+        elif tipo_comando == "executar_agente":
+            # Aqui adicionamos o handler direto para o comando executar_agente
+            return self._comando_executar_agente(params)
         elif tipo_comando == "transformar_post_linkedin":
             return self._comando_transformar_post_linkedin(params)
         elif tipo_comando == "criar_email_venda":
             return self._comando_criar_email_venda(params)
+        elif tipo_comando == "gerar_titulo_email":
+            return self._comando_gerar_titulo_email(params)
         elif tipo_comando == "mostrar_ajuda":
             return self._comando_mostrar_ajuda(params)
         elif tipo_comando == "listar_todos_agentes":
             return self._comando_listar_todos_agentes(params)
-        elif tipo_comando == "listar_agentes_chat":
-            return self._comando_listar_agentes_chat(params)
+        elif tipo_comando == "buscar_ajuda":
+            return self._comando_buscar_ajuda(params)
         elif tipo_comando == "testar_api_listar_agentes":
             return self._comando_testar_api_listar_agentes(params)
-        elif tipo_comando == "testar_api_listar_agentes_chat":
-            return self._comando_testar_api_listar_agentes_chat(params)
         elif tipo_comando == "testar_api_executar_agente":
             return self._comando_testar_api_executar_agente(params)
         elif tipo_comando == "testar_api_tess":
             return self._comando_testar_api_tess(params)
+        elif tipo_comando == "listar_agentes_chat":
+            return self._comando_listar_agentes_chat(params)
+        elif tipo_comando == "testar_api_listar_agentes_chat":
+            return self._comando_testar_api_listar_agentes_chat(params)
         elif tipo_comando == "listar_agentes_por_keyword":
             return self._comando_listar_agentes_por_keyword(params)
         elif tipo_comando == "listar_agentes_por_tipo_e_keyword":
             return self._comando_listar_agentes_por_tipo_e_keyword(params)
-        else:
-            return f"Comando não implementado: {tipo_comando}"
+        elif tipo_comando == "listar_agentes":
+            # Chamamos o método listar_todos_agentes para manter compatibilidade
+            return self._comando_listar_todos_agentes(params)
+            
+        logging.warning(f"Comando não implementado: {tipo_comando}")
+        return f"Comando não implementado: {tipo_comando}"
     
     def _comando_listar_ferramentas(self, params: Dict[str, Any]) -> str:
         """
@@ -617,52 +641,142 @@ class MCPNLProcessor:
         # Chamar o método de busca com tipo e termo
         return self._comando_buscar_agentes({'tipo': tipo, 'termo': termo})
     
-    def _comando_executar_agente_tess(self, agent_id: str, mensagem: str, params: Dict[str, Any] = None, is_url: bool = False) -> str:
+    def _comando_executar_agente_tess(self, agent_id, mensagem, params, is_url=False):
         """
-        Executa um agente TESS com base em seu ID
-
+        Executa um agente TESS com o ID e a mensagem especificados
+        
         Args:
-            agent_id: ID do agente a ser executado
+            agent_id: ID ou slug do agente
             mensagem: Mensagem a ser processada
-            params: Parâmetros específicos do agente obtidos da URL
-            is_url: Indica se os parâmetros vieram de uma URL
-
+            params: Parâmetros adicionais do agente
+            is_url: Se a execução foi iniciada a partir de uma URL
+            
         Returns:
-            Resposta do agente ou mensagem de erro
+            Resposta formatada com a saída do agente
         """
+        # Verificar se o módulo test_api_tess está disponível
         if not TEST_API_TESS_AVAILABLE:
-            return "Não foi possível acessar a API TESS. Verifique se o módulo 'test_api_tess.py' está disponível."
+            return "❌ Módulo test_api_tess não está disponível. Verifique se o arquivo está no diretório 'tests'."
+        
+        # Verificar se os parâmetros foram fornecidos
+        if not agent_id or agent_id.strip() == "":
+            return "❌ Por favor, especifique o ID ou slug do agente."
+        
+        if not mensagem and not is_url:
+            return f"❌ Por favor, forneça uma mensagem para o agente '{agent_id}'."
             
+        # Usar mensagem padrão genérica para URLs se não tiver sido especificada
+        if is_url and not mensagem:
+            mensagem = "Olá, como posso ajudar?"
+        
+        agent_id = agent_id.strip()
+        mensagem = mensagem.strip()
+        
+        # Remover quaisquer caracteres extras (como aspas) que possam ter vindo da entrada
+        agent_id = agent_id.strip('"\'`')
+        
+        logger.info(f"Executando agente TESS (ID: {agent_id}) com mensagem: {mensagem[:50]}...")
+        
+        # Parâmetros específicos para cada agente
+        specific_params = None
+        
+        # Para URLs, temos parâmetros específicos do modelo na URL
+        if is_url and isinstance(params, dict):
+            # Extrair modelo, ferramentas e temperatura da URL
+            modelo = params.get("model", "tess-5-pro")
+            temperatura = params.get("temperature", "0.5")
+            ferramentas = params.get("tools", "no-tools")
+            
+            # Criar estrutura específica para agentes de chat
+            specific_params = {
+                "temperature": temperatura,
+                "model": modelo,
+                "tools": ferramentas,
+                "messages": [
+                    {"role": "user", "content": mensagem}
+                ],
+                "waitExecution": True
+            }
+            
+            logger.info(f"Executando agente TESS a partir de URL com parâmetros: {specific_params}")
+        
         try:
-            # Configurar parâmetros específicos se for uma URL
-            specific_params = None
-            if is_url and params:
-                specific_params = {
-                    "temperature": params.get("temperature", "0.5"),
-                    "model": params.get("model", "tess-5-pro"),
-                    "tools": params.get("tools", "no-tools"),
-                    "messages": [
-                        {"role": "user", "content": mensagem or "Olá, como posso ajudar?"}
-                    ],
-                    "waitExecution": True
-                }
-                
-                logging.info(f"Executando agente TESS a partir de URL com parâmetros: {specific_params}")
-                
             # Executar o agente
-            from tests.test_api_tess import executar_agente
-            success, data = executar_agente(agent_id, mensagem, is_cli=False, specific_params=specific_params)
-            
-            if success and "output" in data:
-                return data["output"]
+            if specific_params:
+                success, response = executar_agente(agent_id, mensagem, is_cli=False, specific_params=specific_params)
             else:
-                error_msg = data.get('error', 'Erro desconhecido')
-                return f"Erro ao executar agente TESS: {error_msg}"
-                
-        except Exception as e:
-            logging.error(f"Erro ao executar agente TESS: {e}")
-            return f"Erro ao executar agente TESS: {str(e)}"
+                success, response = executar_agente(agent_id, mensagem, is_cli=False)
             
+            if success:
+                # Verificar se há output direto
+                if "output" in response:
+                    output_text = response["output"]
+                    return f"✅ **Resposta do agente TESS ({agent_id}):**\n\n{output_text}"
+                # Verificar se há resultado parcial
+                elif "partial_result" in response:
+                    partial = response["partial_result"]
+                    if 'responses' in partial and len(partial['responses']) > 0:
+                        response_data = partial['responses'][0]
+                        status = response_data.get('status', 'desconhecido')
+                        
+                        # Se o status for 'failed', recuperar a mensagem de erro
+                        if status == 'failed':
+                            error_info = response_data.get('error', {})
+                            error_message = error_info.get('message', 'Erro desconhecido')
+                            return f"❌ Falha na execução do agente: {error_message}"
+                        
+                        # Se for 'succeeded' mas não temos output ainda
+                        if status == 'succeeded':
+                            output = response_data.get('output', 'Sem saída disponível')
+                            return f"✅ **Resposta do agente TESS ({agent_id}):**\n\n{output}"
+                        
+                        return f"⏳ Execução do agente em andamento. Status: {status}"
+                    
+                    return "⏳ Execução do agente iniciada. Aguarde o processamento."
+                # Verificar se há full_response
+                elif "full_response" in response and isinstance(response["full_response"], dict):
+                    output = response["full_response"].get("output", "")
+                    if output:
+                        return f"✅ **Resposta do agente TESS ({agent_id}):**\n\n{output}"
+            
+            # Se não encontrou output em nenhum dos formatos esperados
+            error_msg = response.get("error", "Erro desconhecido")
+            error_details = response.get("details", {})
+            
+            # Verificar se temos detalhes específicos do erro
+            if isinstance(error_details, dict):
+                if "status" in error_details and error_details["status"] == 422:
+                    error_text = error_details.get("text", "")
+                    try:
+                        error_json = json.loads(error_text)
+                        if "message" in error_json:
+                            error_message = error_json["message"]
+                            error_fields = error_json.get("errors", {})
+                            
+                            # Listar campos obrigatórios faltantes
+                            missing_fields = []
+                            for field, msgs in error_fields.items():
+                                if msgs and "required" in msgs[0]:
+                                    missing_fields.append(field)
+                            
+                            if missing_fields:
+                                return (f"❌ Erro 422: O agente '{agent_id}' exige campos obrigatórios que não foram fornecidos:\n"
+                                       f"{', '.join(missing_fields)}\n"
+                                       f"Por favor, forneça esses campos ou use um agente diferente.")
+                            
+                            return f"❌ Erro ao executar agente: {error_message}"
+                    except:
+                        pass
+                
+                return (f"❌ Erro 422: O agente '{agent_id}' rejeitou a requisição, provavelmente "
+                       f"porque faltam parâmetros obrigatórios ou o formato está incorreto.\n"
+                       f"Tente usar um agente diferente ou verificar a documentação do agente.")
+            
+            return f"❌ Erro ao executar agente: {error_msg}"
+        except Exception as e:
+            logger.exception(f"Erro ao executar agente: {e}")
+            return f"❌ Erro ao executar agente: {str(e)}"
+    
     def _comando_transformar_post_linkedin(self, params: Dict[str, Any]) -> str:
         """
         Transforma um texto em um post para LinkedIn usando o agente TESS específico
@@ -1071,7 +1185,7 @@ Use linguagem natural para interagir com os comandos. Experimente!"""
         Executa um agente TESS com um ID e uma mensagem
         
         Args:
-            params: Dicionário com 'agent_id' e 'mensagem'
+            params: Dicionário com 'id' e 'mensagem'
             
         Returns:
             Resposta formatada com a saída do agente
@@ -1081,7 +1195,7 @@ Use linguagem natural para interagir com os comandos. Experimente!"""
             return "❌ Módulo test_api_tess não está disponível. Verifique se o arquivo está no diretório 'tests'."
         
         # Obter agente_id e mensagem dos parâmetros
-        agent_id = params.get('agent_id', '').strip()
+        agent_id = params.get('id', '').strip()
         if not agent_id:
             return "❌ Por favor, especifique o ID ou slug do agente."
         
@@ -1096,29 +1210,8 @@ Use linguagem natural para interagir com os comandos. Experimente!"""
         logger.info(f"Executando agente TESS (ID: {agent_id}) com mensagem: {mensagem[:50]}...")
         
         try:
-            # Verificar o tipo de agente e configurar parâmetros específicos
-            specific_params = None
-            
-            if agent_id == "ideias-de-anuncios-para-o-youtube-ads-RVm1a8" or agent_id == "68":
-                specific_params = {
-                    "temperature": "1",
-                    "model": "tess-ai-light",
-                    "maxlength": 750,
-                    "language": "Portuguese (Brazil)",
-                    "tema-do-anuncio": mensagem,
-                    "area-de-atucao-da-empresa": "Educação e Treinamento",
-                    "publico-alvo": "Profissionais buscando aprimoramento em marketing digital",
-                    "ocasiao-especial": "Lançamento do curso",
-                    "descreva-o-produto-ou-servico": "Curso completo de marketing digital com conteúdo prático",
-                    "company-name": "Academia de Marketing Digital"
-                }
-                logger.info("Usando parâmetros específicos para o agente de anúncios do YouTube")
-            
-            # Usar a função do módulo test_api_tess com parâmetros específicos, se disponíveis
-            if specific_params:
-                success, response = executar_agente(agent_id, mensagem, is_cli=False, specific_params=specific_params)
-            else:
-                success, response = executar_agente(agent_id, mensagem, is_cli=False)
+            # Usar a função executar_agente do módulo test_api_tess com consulta dinâmica
+            success, response = executar_agente(agent_id, mensagem, is_cli=False)
             
             if success:
                 # Verificar se há output direto
@@ -1146,49 +1239,44 @@ Use linguagem natural para interagir com os comandos. Experimente!"""
                         return f"⏳ Execução do agente em andamento. Status: {status}"
                     
                     return "⏳ Execução do agente iniciada. Aguarde o processamento."
-            else:
-                error_msg = response.get("error", "Erro desconhecido")
-                error_details = response.get("details", {})
-                
-                # Verificar se temos detalhes específicos do erro
-                if isinstance(error_details, dict):
-                    if "status" in error_details and error_details["status"] == 422:
-                        error_text = error_details.get("text", "")
-                        try:
-                            error_json = json.loads(error_text)
-                            if "message" in error_json:
-                                error_message = error_json["message"]
-                                error_fields = error_json.get("errors", {})
-                                
-                                # Listar campos obrigatórios faltantes
-                                missing_fields = []
-                                for field, msgs in error_fields.items():
-                                    if msgs and "required" in msgs[0]:
-                                        missing_fields.append(field)
-                                
-                                if missing_fields:
-                                    return (f"❌ Erro 422: O agente '{agent_id}' exige campos obrigatórios que não foram fornecidos:\n"
-                                           f"{', '.join(missing_fields)}\n"
-                                           f"Por favor, forneça esses campos ou use um agente diferente.")
-                                
-                                return f"❌ Erro ao executar agente: {error_message}"
-                        except:
-                            pass
-                    
-                    return (f"❌ Erro 422: O agente '{agent_id}' rejeitou a requisição, provavelmente "
-                           f"porque faltam parâmetros obrigatórios ou o formato está incorreto.\n"
-                           f"Tente usar um agente diferente ou verificar se o formato dos parâmetros está correto.")
-                
-                if "text" in error_details:
+                # Verificar se há full_response
+                elif "full_response" in response and isinstance(response["full_response"], dict):
+                    output = response["full_response"].get("output", "")
+                    if output:
+                        return f"✅ **Resposta do agente TESS ({agent_id}):**\n\n{output}"
+            
+            # Se não encontrou output em nenhum dos formatos esperados
+            error_msg = response.get("error", "Erro desconhecido")
+            error_details = response.get("details", {})
+            
+            # Verificar se temos detalhes específicos do erro
+            if isinstance(error_details, dict):
+                if "status" in error_details and error_details["status"] == 422:
+                    error_text = error_details.get("text", "")
                     try:
-                        # Tentar extrair mensagem de erro mais detalhada
-                        error_json = json.loads(error_details["text"])
+                        error_json = json.loads(error_text)
                         if "message" in error_json:
-                            return f"❌ Erro ao executar agente: {error_json['message']}"
+                            error_message = error_json["message"]
+                            error_fields = error_json.get("errors", {})
+                            
+                            # Listar campos obrigatórios faltantes
+                            missing_fields = []
+                            for field, msgs in error_fields.items():
+                                if msgs and "required" in msgs[0]:
+                                    missing_fields.append(field)
+                            
+                            if missing_fields:
+                                return (f"❌ Erro 422: O agente '{agent_id}' exige campos obrigatórios que não foram fornecidos:\n"
+                                       f"{', '.join(missing_fields)}\n"
+                                       f"Por favor, forneça esses campos ou use um agente diferente.")
+                            
+                            return f"❌ Erro ao executar agente: {error_message}"
                     except:
                         pass
                 
-                return f"❌ Erro ao executar agente: {error_msg} (Status: {error_details.get('status', 'Desconhecido')})"
+                return (f"❌ Erro 422: O agente '{agent_id}' rejeitou a requisição, provavelmente "
+                       f"porque faltam parâmetros obrigatórios ou o formato está incorreto.\n"
+                       f"Tente usar um agente diferente ou verificar a documentação do agente.")
             
             return f"❌ Erro ao executar agente: {error_msg}"
         except Exception as e:
