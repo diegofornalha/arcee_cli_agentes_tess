@@ -149,7 +149,7 @@ async def run_agent(message: str) -> None:
         
         # Criar os parâmetros para a conexão com o servidor MCP
         server_params = StdioServerParameters(
-            command=None,  # Não precisamos iniciar outro processo, já temos um rodando
+            command="/home/agentsai/arcee_cli_agentes_tess/venv/bin/databutton-app-mcp",  # Precisamos fornecer um valor válido mesmo que não usemos
             open_stdio=False,  # Não queremos abrir novo stdio
             env=env_vars,
             # Por segurança, não fechar quando o objeto MCPTools for destruído
