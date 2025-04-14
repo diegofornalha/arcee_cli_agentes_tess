@@ -16,7 +16,7 @@ from mcp import StdioServerParameters
 
 # Importar o modelo Arcee
 sys.path.append('/home/agentsai')
-from arcee_model import ArceeModel
+from arcee_cli_agentes_tess.arcee_model import ArceeModel
 
 # Carregar variáveis de ambiente
 load_dotenv()
