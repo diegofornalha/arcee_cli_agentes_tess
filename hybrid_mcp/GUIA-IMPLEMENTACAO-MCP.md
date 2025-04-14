@@ -73,7 +73,7 @@ import asyncio
 
 # Configuração de logging
 logging.basicConfig(...)
-logger = logging.getLogger("tess-mcp-python")
+logger = logging.getLogger("agno-mcp-python")
 
 # Criar aplicação FastAPI
 app = FastAPI(title="TESS MCP Server")

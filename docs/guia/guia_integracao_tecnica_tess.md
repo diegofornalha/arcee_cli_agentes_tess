@@ -4,10 +4,10 @@ Este documento unifica as informações técnicas sobre como integrar a API TESS
 
 ## Índice
 
-1. [Visão Geral da API TESS](#visão-geral-da-api-tess)
+1. [Visão Geral da API TESS](#visão-geral-da-api-agno)
 2. [Integração com MCP](#integração-com-mcp)
-3. [Implementação do TESS Provider](#implementação-do-tess-provider)
-4. [Integração do MCP na CLI TESS](#integração-do-mcp-na-cli-tess)
+3. [Implementação do TESS Provider](#implementação-do-agno-provider)
+4. [Integração do MCP na CLI TESS](#integração-do-mcp-na-cli-agno)
 5. [Autenticação e Configuração](#autenticação-e-configuração)
 
 ---
@@ -16,7 +16,7 @@ Este documento unifica as informações técnicas sobre como integrar a API TESS
 
 ### Base URL e Autenticação
 
-- **Base URL**: `https://api.tess.pareto.io/api`
+- **Base URL**: `https://api.agno.pareto.io/api`
 - **Autenticação**: Token Bearer
 - **Header**: `Authorization: Bearer YOUR_API_KEY`
 - **Formato**: JSON (`Content-Type: application/json`)
@@ -64,7 +64,7 @@ O Model Context Protocol (MCP) é uma interface padronizada para integração de
 ### Implementação do Servidor MCP-TESS
 
 ```typescript
-// TypeScript (mcp-server-tess/src/index.ts)
+// TypeScript (mcp-server-agno/src/index.ts)
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import axios from "axios";
@@ -77,7 +77,7 @@ const server = new McpServer({
 });
 
 // Configuração base para requisições à API da TESS
-const TESS_API_BASE_URL = "https://tess.pareto.io/api";
+const TESS_API_BASE_URL = "https://agno.pareto.io/api";
 const TESS_API_KEY = process.env.TESS_API_KEY;
 
 // Configura o cliente HTTP com autenticação
@@ -146,7 +146,7 @@ server.tool(
   async ({ 
     agent_id, 
     temperature = "0.5", 
-    model = "tess-ai-light", 
+    model = "agno-ai-light", 
     messages, 
     tools = "no-tools", 
     file_ids = [], 
@@ -220,7 +220,7 @@ class TessProvider:
 def __init__(self, api_key: Optional[str] = None, api_url: Optional[str] = None):
     """Inicializa o provedor TESS com a API key do ambiente."""
     self.api_key = api_key or os.getenv("TESS_API_KEY")
-    self.api_url = api_url or os.getenv("TESS_API_URL", "https://tess.pareto.io/api")
+    self.api_url = api_url or os.getenv("TESS_API_URL", "https://agno.pareto.io/api")
     self.local_server_url = os.getenv("TESS_LOCAL_SERVER_URL", "http://localhost:3000")
     self.use_local_server = os.getenv("USE_LOCAL_TESS", "False").lower() in ("true", "1", "t")
     
@@ -371,7 +371,7 @@ A integração MCP suporta as seguintes variáveis de ambiente:
 
 ### Arquivo de Configuração
 
-As configurações do MCP são armazenadas no arquivo `~/.tess/mcp_config.json` com o seguinte formato:
+As configurações do MCP são armazenadas no arquivo `~/.agno/mcp_config.json` com o seguinte formato:
 
 ```json
 {
@@ -458,8 +458,8 @@ class MCPRunClient:
 
 ```bash
 # Configuração da API TESS
-export TESS_API_KEY="sua-chave-api-tess"
-export TESS_API_URL="https://tess.pareto.io/api"
+export TESS_API_KEY="sua-chave-api-agno"
+export TESS_API_URL="https://agno.pareto.io/api"
 
 # Configuração do MCP
 export MCP_SESSION_ID="seu-id-de-sessao-mcp"
@@ -475,7 +475,7 @@ export TESS_LOCAL_SERVER_URL="http://localhost:3000"
 ```python
 def save_config(session_id: str):
     """Salva o ID de sessão MCP no arquivo de configuração."""
-    config_dir = os.path.expanduser("~/.tess")
+    config_dir = os.path.expanduser("~/.agno")
     os.makedirs(config_dir, exist_ok=True)
     
     config_file = os.path.join(config_dir, "mcp_config.json")
@@ -488,7 +488,7 @@ def save_config(session_id: str):
 ```python
 def load_config() -> Optional[str]:
     """Carrega o ID de sessão MCP do arquivo de configuração."""
-    config_file = os.path.expanduser("~/.tess/mcp_config.json")
+    config_file = os.path.expanduser("~/.agno/mcp_config.json")
     
     if os.path.exists(config_file):
         try:

@@ -27,7 +27,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Diretório para armazenar os dados
-DATA_DIR = os.environ.get("TESS_DATA_DIR", os.path.expanduser("~/.tess"))
+DATA_DIR = os.environ.get("TESS_DATA_DIR", os.path.expanduser("~/.agno"))
 BOARDS_FILE = os.path.join(DATA_DIR, "boards.json")
 
 app = Flask(__name__)

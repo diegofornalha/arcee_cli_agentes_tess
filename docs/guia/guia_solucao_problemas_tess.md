@@ -4,9 +4,9 @@ Este documento consolida todas as soluções para problemas comuns encontrados n
 
 ## Índice
 
-1. [Problemas com Comandos TESS](#problemas-com-comandos-tess)
+1. [Problemas com Comandos TESS](#problemas-com-comandos-agno)
 2. [Problemas de Configuração do Chat](#problemas-de-configuração-do-chat)
-3. [Problemas com o Servidor TESS Local](#problemas-com-o-servidor-tess-local)
+3. [Problemas com o Servidor TESS Local](#problemas-com-o-servidor-agno-local)
 4. [Problemas com o Comando `arcee chat`](#problemas-com-o-comando-arcee-chat)
 
 ---

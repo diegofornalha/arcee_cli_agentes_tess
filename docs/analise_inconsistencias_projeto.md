@@ -100,7 +100,7 @@ Esta duplicação causa vários problemas:
 
 A documentação revela a existência de pelo menos três implementações distintas do servidor MCP:
 
-1. **Implementação Node.js/Rust/WebAssembly** (`mcp-server-tess-xtp`)
+1. **Implementação Node.js/Rust/WebAssembly** (`mcp-server-agno-xtp`)
    - Arquitetura complexa usando Node.js, Rust e WebAssembly
    - Problemas documentados de configuração e manutenção
    - Evidenciado no documento `papel_pasta_mcp_server_tess_xtp.md`

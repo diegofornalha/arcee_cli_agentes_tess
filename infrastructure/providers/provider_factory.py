@@ -29,7 +29,7 @@ def create_provider(provider_type: str, api_key: Optional[str] = None, api_url: 
     
     if provider_type.lower() == "arcee":
         return ArceeProvider(api_key, api_url)
-    elif provider_type.lower() == "tess":
+    elif provider_type.lower() == "agno":
         return TessProvider(api_key, api_url)
     else:
         raise ValueError(f"Provedor não suportado: {provider_type}")

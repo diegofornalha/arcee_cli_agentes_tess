@@ -18,7 +18,7 @@ hybrid_mcp/
 ├── docker-compose.yml     # Configuração para ambos os serviços
 └── README.md              # Este arquivo
 
-mcp-server-tess-xtp/
+mcp-server-agno-xtp/
 ├── src/                   # Código-fonte Rust
 ├── server.js              # Servidor Node.js para o plugin WASM
 ├── Dockerfile             # Dockerfile para o serviço Rust
@@ -71,7 +71,7 @@ docker-compose up -d
 1. Inicie o backend Rust:
 
 ```bash
-cd mcp-server-tess-xtp
+cd mcp-server-agno-xtp
 cargo build --target wasm32-wasip1 --release
 npm install
 npm run dev
@@ -136,7 +136,7 @@ Edite `app.py` e adicione novos decoradores `@mcp.resource()` ou `@mcp.tool()`.
 
 ### Adicionando novas funcionalidades ao Rust
 
-Edite `mcp-server-tess-xtp/src/lib.rs` e atualize a lógica de correspondência de rota para `("/api/mcp/execute")` no handler.
+Edite `mcp-server-agno-xtp/src/lib.rs` e atualize a lógica de correspondência de rota para `("/api/mcp/execute")` no handler.
 
 ## Configuração Avançada
 

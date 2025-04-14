@@ -35,7 +35,7 @@ class MCPRunClient:
         if self.use_local:
             base_url = os.getenv("TESS_LOCAL_SERVER_URL", "http://localhost:3000")
         else:
-            base_url = os.getenv("TESS_API_URL", "https://tess.pareto.io")
+            base_url = os.getenv("TESS_API_URL", "https://agno.pareto.io")
             
         self.api_url = f"{base_url}/api"
         logger.info(f"Usando servidor TESS: {self.api_url}")

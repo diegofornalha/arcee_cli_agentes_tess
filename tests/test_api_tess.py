@@ -69,7 +69,7 @@ def listar_agentes(is_cli=True, filter_type=None, keyword=None):
         return False, {"error": error_msg}
 
     # Configuração da requisição
-    url = 'https://tess.pareto.io/api/agents'
+    url = 'https://agno.pareto.io/api/agents'
     headers = {
         'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json'
@@ -212,7 +212,7 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
                 logger.error(f"Erro ao buscar lista de agentes: {e}")
     
     # Configuração da requisição
-    url = f'https://tess.pareto.io/api/agents/{id_numerico}/execute'
+    url = f'https://agno.pareto.io/api/agents/{id_numerico}/execute'
     
     # Determinar se o agente é do tipo chat
     is_chat_agent = False
@@ -244,7 +244,7 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
         # Configurar parâmetros com base no tipo de agente
         if is_chat_agent:
             # Parâmetros para agentes do tipo chat
-            modelo = "tess-5-pro"
+            modelo = "agno-5-pro"
             temperatura = "0.5"
             ferramentas = "no-tools"
             
@@ -279,7 +279,7 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
             # Caso genérico para outros tipos de agentes
             data = {
                 "temperature": 0.5,
-                "model": "tess-ai-light",
+                "model": "agno-ai-light",
                 "maxlength": 500,
                 "language": "Portuguese (Brazil)",
                 "mensagem": mensagem,
@@ -291,7 +291,7 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
             if id_numerico == "53" or "email-de-venda" in str(agent_id).lower():  # E-mail de venda
                 data.update({
                     "nome-do-produto": "TESS AI",
-                    "url-do-produto": "https://tess.pareto.io",
+                    "url-do-produto": "https://agno.pareto.io",
                     "diferenciais-do-produto": mensagem
                 })
             elif id_numerico == "67" or "linkedin" in str(agent_id).lower():  # Post LinkedIn
@@ -407,7 +407,7 @@ def executar_agente(agent_id, mensagem, is_cli=True, specific_params=None):
                         logger.info('Aguardando conclusão da execução...')
                     
                     # URL para verificar o status da execução
-                    status_url = f'https://tess.pareto.io/api/agents/{id_numerico}/executions/{execution_id}'
+                    status_url = f'https://agno.pareto.io/api/agents/{id_numerico}/executions/{execution_id}'
                     
                     # Loop para verificar periodicamente o resultado
                     retries = 0

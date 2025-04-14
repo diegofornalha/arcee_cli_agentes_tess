@@ -5,7 +5,7 @@ const https = require('https');
 const apiKey = 'SUA_TESS_API_KEY'; // Substitua por sua API Key real
 
 // URL da API da TESS
-const url = `https://tess.pareto.io/api/agents?page=1&per_page=10`;
+const url = `https://agno.pareto.io/api/agents?page=1&per_page=10`;
 
 console.log(`Consultando agentes disponíveis na TESS AI...`);
 console.log(`URL: ${url}\n`);

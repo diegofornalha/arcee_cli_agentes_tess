@@ -59,7 +59,7 @@ Esta ferramenta é valiosa para diagnosticar problemas de instalação e depend�
 
 Contém implementações específicas para o protocolo MCP:
 
-- **Subpasta `tess/`**: Contém implementações específicas para integração do TESS com MCP.
+- **Subpasta `agno/`**: Contém implementações específicas para integração do TESS com MCP.
 
 Esta organização permite separar componentes por sua função específica, facilitando a manutenção e evolução do código.
 

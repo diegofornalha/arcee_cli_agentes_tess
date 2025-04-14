@@ -33,7 +33,7 @@ def parse_tess_url(url):
     Analisa uma URL do TESS e extrai o slug do agente e parâmetros.
     
     Args:
-        url: URL do formato @https://tess.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0&model=...
+        url: URL do formato @https://agno.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0&model=...
         
     Returns:
         Tupla com (slug do agente, dicionário de parâmetros)
@@ -44,7 +44,7 @@ def parse_tess_url(url):
             url = url[1:]
             
         # Verificar se é uma URL válida do TESS
-        if not url.startswith('https://tess.pareto.io/'):
+        if not url.startswith('https://agno.pareto.io/'):
             return None, None
             
         # Extrair o slug do agente
@@ -94,7 +94,7 @@ def main():
     # Configurar parâmetros específicos para a execução
     specific_params = {
         "temperature": params.get("temperature", "0.5"),
-        "model": params.get("model", "tess-5-pro"),
+        "model": params.get("model", "agno-5-pro"),
         "tools": params.get("tools", "no-tools"),
         "messages": [
             {"role": "user", "content": mensagem}

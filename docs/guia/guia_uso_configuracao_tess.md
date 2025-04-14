@@ -4,10 +4,10 @@ Este documento unifica todas as informações sobre como usar e configurar a API
 
 ## Índice
 
-1. [Comandos TESS Disponíveis](#comandos-tess-disponíveis)
-2. [Modelos TESS e Como Selecioná-los](#modelos-tess-e-como-selecioná-los)
+1. [Comandos TESS Disponíveis](#comandos-agno-disponíveis)
+2. [Modelos TESS e Como Selecioná-los](#modelos-agno-e-como-selecioná-los)
 3. [Consulta Dinâmica à API](#consulta-dinâmica-à-api)
-4. [Servidor TESS Local](#servidor-tess-local)
+4. [Servidor TESS Local](#servidor-agno-local)
 5. [Exemplos Práticos](#exemplos-práticos)
 
 ---
@@ -30,7 +30,7 @@ Estes são os comandos mais simples e recomendados para uso no chat Arcee:
 | Comando | Descrição | Exemplo |
 |---------|-----------|---------|
 | `executar agente <id> com mensagem "<texto>"` | Executa um agente específico | `executar agente professional-dev-ai com mensagem "Como implementar um singleton em Python?"` |
-| `buscar agentes tess para <termo>` | Busca agentes por tema | `buscar agentes tess para email` |
+| `buscar agentes agno para <termo>` | Busca agentes por tema | `buscar agentes agno para email` |
 | `buscar agentes tipo chat para <termo>` | Busca agentes do tipo chat por tema | `buscar agentes tipo chat para linkedin` |
 | `transformar texto em post para linkedin: <texto>` | Atalho para criar um post para LinkedIn | `transformar texto em post para linkedin: Lançamento do produto X` |
 | `criar email de venda para: <produto>` | Atalho para gerar um email de vendas | `criar email de venda para: software de gestão` |
@@ -58,7 +58,7 @@ python -m tests.test_api_tess executar professional-dev-ai "Como implementar um 
 Você pode especificar um modelo diretamente através de uma URL do TESS, que pode ser inserida no chat do Arcee:
 
 ```
-@https://tess.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0&model=claude-3-7-sonnet-latest-thinking&tools=no-tools#
+@https://agno.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0&model=claude-3-7-sonnet-latest-thinking&tools=no-tools#
 ```
 
 Parâmetros importantes na URL:
@@ -76,8 +76,8 @@ Parâmetros importantes na URL:
 |--------|-----------|----------------|
 | `claude-3-7-sonnet-latest` | Versão padrão do Claude 3.7 Sonnet | Alta qualidade de resposta, raciocínio lógico avançado, suporte a ferramentas |
 | `claude-3-7-sonnet-latest-thinking` | Versão do Claude 3.7 com modo de pensamento | Mostra o raciocínio passo a passo, ideal para problemas complexos |
-| `tess-5-pro` | Modelo padrão para agentes de chat | Bom equilíbrio entre velocidade e qualidade |
-| `tess-ai-light` | Modelo leve para tarefas simples | Resposta rápida, ideal para tarefas diretas |
+| `agno-5-pro` | Modelo padrão para agentes de chat | Bom equilíbrio entre velocidade e qualidade |
+| `agno-ai-light` | Modelo leve para tarefas simples | Resposta rápida, ideal para tarefas diretas |
 
 ### Modelos de Pensamento (Thinking)
 
@@ -167,7 +167,7 @@ if ((tipo_agente and tipo_agente.lower() == "chat") or
 # Configurar parâmetros com base no tipo de agente
 if is_chat_agent:
     # Parâmetros para agentes do tipo chat
-    modelo = "tess-5-pro"
+    modelo = "agno-5-pro"
     temperatura = "0.5"
     ferramentas = "no-tools"
     
@@ -224,7 +224,7 @@ O servidor inclui uma função `generateResponse()` que:
 def __init__(self):
     """Inicializa o provedor TESS com a API key do ambiente."""
     self.api_key = os.getenv("TESS_API_KEY")
-    self.api_url = os.getenv("TESS_API_URL", "https://tess.pareto.io/api")
+    self.api_url = os.getenv("TESS_API_URL", "https://agno.pareto.io/api")
     self.local_server_url = os.getenv("TESS_LOCAL_SERVER_URL", "http://localhost:3000")
     self.use_local_server = os.getenv("USE_LOCAL_TESS", "True").lower() in ("true", "1", "t")
 ```
@@ -245,7 +245,7 @@ Para configurar o sistema, adicione as seguintes variáveis de ambiente:
 ```
 # .env
 TESS_API_KEY=your_api_key_here
-TESS_API_URL=https://tess.pareto.io/api
+TESS_API_URL=https://agno.pareto.io/api
 TESS_LOCAL_SERVER_URL=http://localhost:3000
 USE_LOCAL_TESS=True
 ```
@@ -303,7 +303,7 @@ Encontrados 3 agentes relacionados a "linkedin":
 ### Exemplo 2: Usar o Claude 3.7 Sonnet para Programação
 
 ```
-@https://tess.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0&model=claude-3-7-sonnet-latest&tools=internet# "Escreva um algoritmo em Python para encontrar números primos até 100"
+@https://agno.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0&model=claude-3-7-sonnet-latest&tools=internet# "Escreva um algoritmo em Python para encontrar números primos até 100"
 ```
 
 Resultado:

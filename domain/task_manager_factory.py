@@ -26,7 +26,7 @@ class TaskManagerFactory:
         Cria um gerenciador de tarefas para o provedor especificado.
         
         Args:
-            provider: Nome do provedor (ex: "arcee", "tess")
+            provider: Nome do provedor (ex: "arcee", "agno")
             **kwargs: Argumentos adicionais para o gerenciador
             
         Returns:
@@ -34,7 +34,7 @@ class TaskManagerFactory:
         """
         logger.info(f"Criando gerenciador de tarefas para provedor: {provider}")
         
-        if provider.lower() == "tess":
+        if provider.lower() == "agno":
             try:
                 # Cria uma instância do TessManager com os parâmetros fornecidos
                 api_key = kwargs.get("api_key")

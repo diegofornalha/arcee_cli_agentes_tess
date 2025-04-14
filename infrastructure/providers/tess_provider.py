@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class TessProvider:
     def __init__(self, api_key: Optional[str] = None, api_url: Optional[str] = None):
         self.api_key = api_key or os.getenv("TESS_API_KEY")
-        self.api_url = api_url or os.getenv("TESS_API_URL", "https://tess.pareto.io/api")
+        self.api_url = api_url or os.getenv("TESS_API_URL", "https://agno.pareto.io/api")
         
         if not self.api_key:
             raise ValueError("TESS_API_KEY não configurada")

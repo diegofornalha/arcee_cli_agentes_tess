@@ -33,8 +33,8 @@ def testar_mcp_ferramentas():
         cmd = f"npx mcpx tools --session {MCP_SESSION}"
         resultado = subprocess.run(cmd, shell=True, check=True, text=True, capture_output=True)
         
-        # Verifica se 'tess' está nas ferramentas disponíveis
-        if "tess" in resultado.stdout.lower():
+        # Verifica se 'agno' está nas ferramentas disponíveis
+        if "agno" in resultado.stdout.lower():
             print("✅ Ferramenta 'TESS' encontrada no MCP.run")
             return True
         else:
@@ -51,7 +51,7 @@ def testar_tess_agentes():
     try:
         print("\nTestando listagem de agentes TESS...")
         params = json.dumps({"page": 1, "per_page": 10})
-        cmd = f"npx mcpx run mcp-server-tess.listar_agentes_tess --json '{params}' --session {MCP_SESSION}"
+        cmd = f"npx mcpx run mcp-server-agno.listar_agentes_tess --json '{params}' --session {MCP_SESSION}"
         resultado = subprocess.run(cmd, shell=True, check=True, text=True, capture_output=True)
         
         # Verificar se a resposta parece ser uma lista de agentes
@@ -73,7 +73,7 @@ def testar_tess_arquivos():
     try:
         print("\nTestando listagem de arquivos TESS...")
         params = json.dumps({"page": 1, "per_page": 10})
-        cmd = f"npx mcpx run mcp-server-tess.listar_arquivos_tess --json '{params}' --session {MCP_SESSION}"
+        cmd = f"npx mcpx run mcp-server-agno.listar_arquivos_tess --json '{params}' --session {MCP_SESSION}"
         resultado = subprocess.run(cmd, shell=True, check=True, text=True, capture_output=True)
         
         # Verificar se a resposta parece ser uma lista de arquivos

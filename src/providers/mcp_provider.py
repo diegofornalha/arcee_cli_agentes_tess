@@ -11,7 +11,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # Constantes para a configuração do MCP
-CONFIG_DIR = Path.home() / ".tess"
+CONFIG_DIR = Path.home() / ".agno"
 MCP_CONFIG_FILE = CONFIG_DIR / "mcp_config.json"
 
 class MCPProvider:

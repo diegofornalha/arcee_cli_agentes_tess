@@ -22,7 +22,7 @@ else
 fi
 
 # URL base da API TESS
-API_URL="https://tess.pareto.io/api"
+API_URL="https://agno.pareto.io/api"
 
 # Configurações para curl
 HEADERS=(

@@ -29,7 +29,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Importa a aplicação Flask do módulo server
-from domain.tess.server import app
+from domain.agno.server import app
 
 def main():
     """Função principal para iniciar o servidor"""

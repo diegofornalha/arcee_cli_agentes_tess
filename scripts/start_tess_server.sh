@@ -18,7 +18,7 @@ get_project_root() {
 
 PROJECT_ROOT=$(get_project_root)
 # Corrigindo o caminho para o diretório correto do servidor
-SERVIDOR_DIR="$PROJECT_ROOT/mcp-server-tess-xtp"
+SERVIDOR_DIR="$PROJECT_ROOT/mcp-server-agno-xtp"
 
 echo -e "${YELLOW}=== Iniciando Servidor TESS MCP ===${NC}"
 

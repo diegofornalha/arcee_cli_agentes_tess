@@ -46,7 +46,7 @@ class TessClient:
         
         # Comando MCP
         cmd = [
-            "mcpx", "run", f"mcp-server-tess.{tool_name}",
+            "mcpx", "run", f"mcp-server-agno.{tool_name}",
             "--json", params_json,
             "--session", self.mcp_session
         ]
@@ -102,7 +102,7 @@ class TessClient:
         }))
     
     def executar_agente(self, agent_id: str, messages: List[Dict[str, str]], 
-                      temperature: str = "0.5", model: str = "tess-ai-light",
+                      temperature: str = "0.5", model: str = "agno-ai-light",
                       tools: str = "no-tools", file_ids: List[int] = [], 
                       wait_execution: bool = False) -> Dict[str, Any]:
         """
@@ -112,7 +112,7 @@ class TessClient:
             agent_id: ID do agente a ser executado
             messages: Lista de mensagens no formato [{role: "user", content: "mensagem"}]
             temperature: Temperatura para geração (0-1, padrão: 0.5)
-            model: Modelo a ser usado (padrão: tess-ai-light)
+            model: Modelo a ser usado (padrão: agno-ai-light)
             tools: Ferramentas a serem habilitadas (padrão: no-tools)
             file_ids: IDs dos arquivos a serem anexados
             wait_execution: Se deve esperar pela execução completa (padrão: False)

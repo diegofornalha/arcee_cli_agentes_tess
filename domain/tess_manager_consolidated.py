@@ -50,7 +50,7 @@ class TessManager(TaskManagerInterface):
         
         # Se não foi fornecido na variável de ambiente, tenta buscar no arquivo .env
         if not self.api_key:
-            env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'mcp-server-tess', '.env')
+            env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'mcp-server-agno', '.env')
             if os.path.exists(env_path):
                 with open(env_path, 'r') as f:
                     for line in f:
@@ -61,7 +61,7 @@ class TessManager(TaskManagerInterface):
         if not self.api_key:
             raise ConfigurationError("Chave de API do TESS não fornecida e não encontrada no ambiente")
         
-        self.base_url = api_url or "https://tess.pareto.io/api"
+        self.base_url = api_url or "https://agno.pareto.io/api"
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"

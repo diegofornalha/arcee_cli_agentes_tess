@@ -5,7 +5,7 @@ bin = "dist/plugin.wasm"
 extension_point_id = "ext_01je4jj1tteaktf0zd0anm8854"
 
 # This is the 'binding' name used for the plugin.
-name = "mcp-server-tess"
+name = "mcp-server-agno"
 
 [scripts]
 # xtp plugin build runs this script to generate the wasm file

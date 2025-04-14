@@ -16,7 +16,7 @@ echo -e "${GREEN}=== Iniciando Servidor MCP-TESS em segundo plano ===${NC}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 # Corrigindo o caminho para o diretório correto do servidor
-SERVIDOR_DIR="$PROJECT_ROOT/mcp-server-tess-xtp"
+SERVIDOR_DIR="$PROJECT_ROOT/mcp-server-agno-xtp"
 
 # Verifica se o servidor já está rodando
 if pgrep -f "node.*server.js" > /dev/null; then
@@ -45,9 +45,9 @@ fi
 echo "Iniciando o servidor em segundo plano..."
 # Se API Key foi fornecida, sobrescreve a variável de ambiente
 if [ -n "$API_KEY" ]; then
-    (cd "$SERVIDOR_DIR" && TESS_API_KEY="$API_KEY" node server.js > logs/tess-server.log 2>&1 &)
+    (cd "$SERVIDOR_DIR" && TESS_API_KEY="$API_KEY" node server.js > logs/agno-server.log 2>&1 &)
 else
-    (cd "$SERVIDOR_DIR" && node server.js > logs/tess-server.log 2>&1 &)
+    (cd "$SERVIDOR_DIR" && node server.js > logs/agno-server.log 2>&1 &)
 fi
 
 # Aguarda um pouco para verificar se iniciou corretamente
@@ -56,7 +56,7 @@ sleep 2
 # Verifica se o servidor está rodando
 if pgrep -f "node.*server.js" > /dev/null; then
     echo -e "${GREEN}✅ Servidor MCP-TESS iniciado com sucesso em segundo plano!${NC}"
-    echo "Log disponível em: $SERVIDOR_DIR/logs/tess-server.log"
+    echo "Log disponível em: $SERVIDOR_DIR/logs/agno-server.log"
     
     # Mostrar o PID para referência
     PID=$(pgrep -f "node.*server.js")
@@ -64,6 +64,6 @@ if pgrep -f "node.*server.js" > /dev/null; then
     echo "Para encerrar o servidor: kill $PID"
 else
     echo -e "${RED}❌ Falha ao iniciar o servidor em segundo plano${NC}"
-    echo "Verifique o log para mais detalhes: $SERVIDOR_DIR/logs/tess-server.log"
+    echo "Verifique o log para mais detalhes: $SERVIDOR_DIR/logs/agno-server.log"
     exit 1
 fi 

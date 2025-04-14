@@ -13,7 +13,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger("tess-mcp-python")
+logger = logging.getLogger("agno-mcp-python")
 
 # Criar aplicação FastAPI
 app = FastAPI(title="TESS MCP Server")

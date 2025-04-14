@@ -15,11 +15,11 @@ A pasta `domain` contém os seguintes componentes principais:
 5. `task_manager_factory.py` (55 linhas) - Factory para criação de gerenciadores de tarefas
 6. `tess_manager_consolidated.py` (691 linhas) - Implementação consolidada do gerenciador TESS
 7. `tess_task_manager.py` (372 linhas) - Implementação anterior ou alternativa do gerenciador TESS
-8. `tess/` (subpasta) - Componentes específicos para integração com TESS
+8. `agno/` (subpasta) - Componentes específicos para integração com TESS
 
-### Estrutura da Subpasta `tess/`
+### Estrutura da Subpasta `agno/`
 
-A subpasta `tess/` contém:
+A subpasta `agno/` contém:
 
 1. `__init__.py` (11 linhas) - Definição do submódulo
 2. `cli.py` (66 linhas) - Interface de linha de comando para TESS
@@ -78,7 +78,7 @@ Implementação consolidada do gerenciador de tarefas para o serviço TESS, forn
 
 Esta implementação é a principal ponte entre o domínio da aplicação e o serviço TESS.
 
-### Subpasta `tess/`
+### Subpasta `agno/`
 
 Contém componentes de nível mais baixo para interação direta com o serviço TESS:
 - Implementação da API

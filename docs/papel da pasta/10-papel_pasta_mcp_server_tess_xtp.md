@@ -1,8 +1,8 @@
-# Documentação da Pasta `mcp-server-tess-xtp`
+# Documentação da Pasta `mcp-server-agno-xtp`
 
 ## Visão Geral
 
-A pasta `mcp-server-tess-xtp` contém um servidor proxy que integra o TESS (Text Evaluation and Semantic Services) com o protocolo MCP (Model Context Protocol). Este componente atua como uma ponte entre aplicações cliente e os serviços TESS, implementando uma API compatível com o protocolo MCP usando uma arquitetura híbrida que combina Node.js, Rust e WebAssembly.
+A pasta `mcp-server-agno-xtp` contém um servidor proxy que integra o TESS (Text Evaluation and Semantic Services) com o protocolo MCP (Model Context Protocol). Este componente atua como uma ponte entre aplicações cliente e os serviços TESS, implementando uma API compatível com o protocolo MCP usando uma arquitetura híbrida que combina Node.js, Rust e WebAssembly.
 
 ## Propósito
 
@@ -22,7 +22,7 @@ A arquitetura do servidor é baseada em três componentes principais:
 3. **Integração FastAPI** (pasta hybrid_mcp): Implementação alternativa em Python que oferece os mesmos endpoints, servindo como solução de fallback.
 
 ```
-mcp-server-tess-xtp/
+mcp-server-agno-xtp/
 │
 ├── server.js                 # Servidor Express que gerencia requisições HTTP
 ├── src/                      # Código Rust compilado para WebAssembly
@@ -122,4 +122,4 @@ Para desenvolvimento futuro, sugere-se:
 
 ## Conclusão
 
-A pasta `mcp-server-tess-xtp` desempenha um papel fundamental no ecossistema Arcee CLI, fornecendo a ponte necessária entre o protocolo MCP e os serviços TESS. A arquitetura híbrida oferece opções de implementação, permitindo escolher entre desempenho (Node.js + Rust/WebAssembly) ou simplicidade (Python/FastAPI) conforme as necessidades do projeto. 
+A pasta `mcp-server-agno-xtp` desempenha um papel fundamental no ecossistema Arcee CLI, fornecendo a ponte necessária entre o protocolo MCP e os serviços TESS. A arquitetura híbrida oferece opções de implementação, permitindo escolher entre desempenho (Node.js + Rust/WebAssembly) ou simplicidade (Python/FastAPI) conforme as necessidades do projeto. 

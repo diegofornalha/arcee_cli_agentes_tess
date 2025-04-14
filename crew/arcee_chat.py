@@ -84,7 +84,7 @@ def parse_tess_url(url):
     Extrai o slug do agente e parâmetros de uma URL do TESS
     
     Args:
-        url: URL do TESS no formato https://tess.pareto.io/...
+        url: URL do TESS no formato https://agno.pareto.io/...
         
     Returns:
         Tupla (slug, parâmetros)
@@ -95,7 +95,7 @@ def parse_tess_url(url):
             url = url[1:]
             
         # Verificar se é uma URL válida do TESS
-        if not url.startswith('https://tess.pareto.io/'):
+        if not url.startswith('https://agno.pareto.io/'):
             return None, None
             
         # Fazer o parsing da URL
@@ -344,7 +344,7 @@ def chat() -> None:
                         continue
                     
                     # Detectar e executar URL do TESS
-                    if user_input.startswith("@https://tess.pareto.io/") or user_input.startswith("https://tess.pareto.io/"):
+                    if user_input.startswith("@https://agno.pareto.io/") or user_input.startswith("https://agno.pareto.io/"):
                         logger.info("Detectada URL do TESS")
                         console.print("[italic]Detectada URL do TESS. Tentando executar agente...[/italic]")
                         
@@ -762,8 +762,8 @@ def _mostrar_ajuda(console, test_api_tess_available):
         console.print("  [dim]Exemplo: executar professional-dev-ai \"Como implementar um singleton em Python?\"[/dim]")
         console.print("• [bold]executar agente <id> com mensagem \"<texto>\"[/bold] - Executa um agente TESS (formato completo)")
         console.print("  [dim]Exemplo: executar agente professional-dev-ai com mensagem \"Como implementar um singleton em Python?\"[/dim]")
-        console.print("• [bold]@https://tess.pareto.io/... (URL)[/bold] - Executar agente diretamente da URL do TESS")
-        console.print("  [dim]Exemplo: @https://tess.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai[/dim]")
+        console.print("• [bold]@https://agno.pareto.io/... (URL)[/bold] - Executar agente diretamente da URL do TESS")
+        console.print("  [dim]Exemplo: @https://agno.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai[/dim]")
     
     # Comandos TESS API (legado)
     if test_api_tess_available:

@@ -68,7 +68,7 @@ python -m tests.test_api_tess executar <ID_OU_SLUG> "Sua mensagem aqui"
 python -m tests.test_api_tess listar
 
 # Teste de URL TESS
-python -m tests.test_tess_url "@https://tess.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0.7"
+python -m tests.test_tess_url "@https://agno.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0.7"
 ```
 
 ## Integração com o Projeto

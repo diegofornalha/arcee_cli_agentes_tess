@@ -27,11 +27,11 @@ A subpasta `mcp/` contém diversos exemplos relacionados à integração com o p
 10. `.env` (20 linhas) - Arquivo de configuração com variáveis de ambiente
 11. `mcp_sse_service.service` (19 linhas) - Definição de serviço para systemd
 12. `com.arcee.mcp-sse-client.plist` (30 linhas) - Arquivo de configuração para launchd (macOS)
-13. `tess/` (subpasta) - Exemplos específicos para integração direta com TESS
+13. `agno/` (subpasta) - Exemplos específicos para integração direta com TESS
 
-#### Subpasta `mcp/tess/`
+#### Subpasta `mcp/agno/`
 
-A subpasta `tess/` dentro de `mcp/` contém exemplos específicos para interação direta com a API TESS:
+A subpasta `agno/` dentro de `mcp/` contém exemplos específicos para interação direta com a API TESS:
 
 1. `tess_example.py` (1 linha) - Arquivo de exemplo minimalista
 2. `tess_test.sh` (39 linhas) - Script de shell para testar a API TESS

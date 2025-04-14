@@ -86,7 +86,7 @@ class TessNLProcessor:
         
         # Inicializa o gerenciador de tarefas
         try:
-            self.task_manager = TaskManagerFactory.create("tess", session_id=session_id)
+            self.task_manager = TaskManagerFactory.create("agno", session_id=session_id)
             if not self.task_manager:
                 raise ValueError("Gerenciador TESS não disponível")
                 
@@ -356,7 +356,7 @@ class TessNLProcessor:
             # Preparar os parâmetros para o agente no formato correto
             parametros = {
                 "temperature": "0.5",
-                "model": "tess-ai-light",
+                "model": "agno-ai-light",
                 "maxlength": 500,
                 "language": "Portuguese (Brazil)"
             }
@@ -366,7 +366,7 @@ class TessNLProcessor:
             if "e-mail-de-venda" in agent_title or "email-de-venda" in agent_title:
                 parametros.update({
                     "nome-do-produto": "TESS AI",
-                    "url-do-produto": "https://tess.pareto.io",
+                    "url-do-produto": "https://agno.pareto.io",
                     "diferenciais-do-produto": message
                 })
             elif "linkedin" in agent_title or "post" in agent_title:

@@ -41,12 +41,12 @@ logger = logging.getLogger(__name__)
 
 # URLs para o dashboard do TESS
 TESS_DASHBOARD_URLS = {
-    "transformar-texto-em-post-para-linkedin-mF37hV": "https://tess.pareto.io/pt-BR/dashboard/user/ai/generator/transformar-texto-em-post-para-linkedin-mF37hV",
-    "e-mail-de-venda-Sxtjz8": "https://tess.pareto.io/pt-BR/dashboard/user/ai/generator/e-mail-de-venda-Sxtjz8",
-    "titulo-de-email-para-anuncio-de-novo-recurso-fDba8a": "https://tess.pareto.io/pt-BR/dashboard/user/ai/generator/titulo-de-email-para-anuncio-de-novo-recurso-fDba8a",
-    "e-mail-de-solicitacao-de-review-pos-venda-ihvlWw": "https://tess.pareto.io/pt-BR/dashboard/user/ai/generator/e-mail-de-solicitacao-de-review-pos-venda-ihvlWw",
-    "palavras-chave-para-campanha-de-marca-96zlo7": "https://tess.pareto.io/pt-BR/dashboard/user/ai/generator/palavras-chave-para-campanha-de-marca-96zlo7",
-    "palavras-chave-para-campanha-de-produtosservicos-egK882": "https://tess.pareto.io/pt-BR/dashboard/user/ai/generator/palavras-chave-para-campanha-de-produtosservicos-egK882"
+    "transformar-texto-em-post-para-linkedin-mF37hV": "https://agno.pareto.io/pt-BR/dashboard/user/ai/generator/transformar-texto-em-post-para-linkedin-mF37hV",
+    "e-mail-de-venda-Sxtjz8": "https://agno.pareto.io/pt-BR/dashboard/user/ai/generator/e-mail-de-venda-Sxtjz8",
+    "titulo-de-email-para-anuncio-de-novo-recurso-fDba8a": "https://agno.pareto.io/pt-BR/dashboard/user/ai/generator/titulo-de-email-para-anuncio-de-novo-recurso-fDba8a",
+    "e-mail-de-solicitacao-de-review-pos-venda-ihvlWw": "https://agno.pareto.io/pt-BR/dashboard/user/ai/generator/e-mail-de-solicitacao-de-review-pos-venda-ihvlWw",
+    "palavras-chave-para-campanha-de-marca-96zlo7": "https://agno.pareto.io/pt-BR/dashboard/user/ai/generator/palavras-chave-para-campanha-de-marca-96zlo7",
+    "palavras-chave-para-campanha-de-produtosservicos-egK882": "https://agno.pareto.io/pt-BR/dashboard/user/ai/generator/palavras-chave-para-campanha-de-produtosservicos-egK882"
 }
 
 def parse_tess_url(url: str) -> Tuple[Optional[str], Optional[Dict[str, Any]]]:
@@ -54,7 +54,7 @@ def parse_tess_url(url: str) -> Tuple[Optional[str], Optional[Dict[str, Any]]]:
     Analisa uma URL do TESS e extrai o slug do agente e parâmetros.
     
     Args:
-        url: URL do formato @https://tess.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0&model=claude-3-7-sonnet-latest&tools=internet#
+        url: URL do formato @https://agno.pareto.io/pt-BR/dashboard/user/ai/chat/ai-chat/professional-dev-ai?temperature=0&model=claude-3-7-sonnet-latest&tools=internet#
         
     Returns:
         Tupla com (slug do agente, dicionário de parâmetros)
@@ -65,7 +65,7 @@ def parse_tess_url(url: str) -> Tuple[Optional[str], Optional[Dict[str, Any]]]:
             url = url[1:]
             
         # Verificar se é uma URL válida do TESS
-        if not url.startswith('https://tess.pareto.io/'):
+        if not url.startswith('https://agno.pareto.io/'):
             return None, None
             
         # Extrair o slug do agente
@@ -121,19 +121,19 @@ class MCPNLProcessor:
         # Padrões de expressões regulares para comandos
         self.comandos_padroes = [
             # Buscar agentes TESS por palavras-chave
-            (r'(buscar?|procurar?|encontrar?|pesquisar?)\s+(agentes?|templates?|modelos?)\s+(do\s+)?(tess|tessai)(\s+com\s+|\s+sobre\s+|\s+para\s+|\s+relacionado\s+(a|com|ao)\s+|\s+de\s+)(?P<termo>[a-zA-Z0-9_\s-]+)', 'buscar_agentes'),
+            (r'(buscar?|procurar?|encontrar?|pesquisar?)\s+(agentes?|templates?|modelos?)\s+(do\s+)?(agno|tessai)(\s+com\s+|\s+sobre\s+|\s+para\s+|\s+relacionado\s+(a|com|ao)\s+|\s+de\s+)(?P<termo>[a-zA-Z0-9_\s-]+)', 'buscar_agentes'),
             
             # Buscar agentes TESS por tipo específico
-            (r'(buscar?|procurar?|encontrar?|pesquisar?)\s+(agentes?|templates?|modelos?)\s+(do\s+)?(tipo\s+)?(?P<tipo>chat|text|completion)(\s+(do|da|no|na)\s+(tess|tessai))?', 'buscar_agentes_por_tipo'),
+            (r'(buscar?|procurar?|encontrar?|pesquisar?)\s+(agentes?|templates?|modelos?)\s+(do\s+)?(tipo\s+)?(?P<tipo>chat|text|completion)(\s+(do|da|no|na)\s+(agno|tessai))?', 'buscar_agentes_por_tipo'),
             
             # Buscar agentes TESS por tipo específico e termo
-            (r'(buscar?|procurar?|encontrar?|pesquisar?)\s+(agentes?|templates?|modelos?)\s+(do\s+)?(tipo\s+)?(?P<tipo>chat|text|completion)(\s+(do|da|no|na)\s+(tess|tessai))?(\s+com\s+|\s+sobre\s+|\s+para\s+|\s+relacionado\s+(a|com|ao)\s+|\s+de\s+)(?P<termo>[a-zA-Z0-9_\s-]+)', 'buscar_agentes_por_tipo_e_termo'),
+            (r'(buscar?|procurar?|encontrar?|pesquisar?)\s+(agentes?|templates?|modelos?)\s+(do\s+)?(tipo\s+)?(?P<tipo>chat|text|completion)(\s+(do|da|no|na)\s+(agno|tessai))?(\s+com\s+|\s+sobre\s+|\s+para\s+|\s+relacionado\s+(a|com|ao)\s+|\s+de\s+)(?P<termo>[a-zA-Z0-9_\s-]+)', 'buscar_agentes_por_tipo_e_termo'),
             
             # Novo: Listar agentes com uma palavra-chave específica
             (r'(listar?|mostrar?|exibir?|ver?)\s+(agentes?|templates?|modelos?)\s+(com|contendo|sobre|relacionado\s+(a|com|ao))\s+(?P<keyword>[a-zA-Z0-9_\s-]+)', 'listar_agentes_por_keyword'),
             
             # Novo: Listar agentes de um tipo com uma palavra-chave específica
-            (r'(listar?|mostrar?|exibir?|ver?)\s+(agentes?|templates?|modelos?)\s+(do\s+)?(tipo\s+)?(?P<tipo>chat|text|completion)(\s+(do|da|no|na)\s+(tess|tessai))?(\s+(com|contendo|sobre|relacionado\s+(a|com|ao)))\s+(?P<keyword>[a-zA-Z0-9_\s-]+)', 'listar_agentes_por_tipo_e_keyword'),
+            (r'(listar?|mostrar?|exibir?|ver?)\s+(agentes?|templates?|modelos?)\s+(do\s+)?(tipo\s+)?(?P<tipo>chat|text|completion)(\s+(do|da|no|na)\s+(agno|tessai))?(\s+(com|contendo|sobre|relacionado\s+(a|com|ao)))\s+(?P<keyword>[a-zA-Z0-9_\s-]+)', 'listar_agentes_por_tipo_e_keyword'),
             
             # Novo: Capturar formato simplificado "agentes <keyword>" sem palavras de ligação
             (r'^(listar?|mostrar?|exibir?|ver?)?\s*(agentes?|templates?|modelos?)\s+(?P<keyword>[a-zA-Z0-9_\s-]{3,})$', 'listar_agentes_por_keyword'),
@@ -142,7 +142,7 @@ class MCPNLProcessor:
             (r'^executar\s+(?P<id>[a-zA-Z0-9_-]+)\s+[\"\'](?P<mensagem>.+)[\"\']$', 'executar_agente'),
             
             # Executar agente TESS específico
-            (r'(executar?|rodar?|usar?)\s+(o\s+)?(agente|template|modelo)\s+(do\s+)?(tess|tessai)\s+(?P<id>[a-zA-Z0-9_-]+)(\s+com\s+(mensagem|texto)\s+(?P<mensagem>[^$]+))?', 'executar_agente_tess'),
+            (r'(executar?|rodar?|usar?)\s+(o\s+)?(agente|template|modelo)\s+(do\s+)?(agno|tessai)\s+(?P<id>[a-zA-Z0-9_-]+)(\s+com\s+(mensagem|texto)\s+(?P<mensagem>[^$]+))?', 'executar_agente_tess'),
             
             # Transformar texto em post LinkedIn (comando direto)
             (r'(transformar?|converter?|criar?)\s+(esse\s+|este\s+)?(texto|conteúdo|mensagem)\s+em\s+(post|publicação)\s+(para|do)\s+linkedin:?\s*(?P<texto>.+)', 'transformar_post_linkedin'),
@@ -154,19 +154,19 @@ class MCPNLProcessor:
             (r'(mostrar?|ver?|listar?)\s+(comandos|opções|ajuda)', 'mostrar_ajuda'),
             
             # Listar todos os agentes TESS
-            (r'(mostrar?|exibir?|listar?|ver?)\s+(todos\s+)?(os\s+)?(agentes?|templates?|modelos?)\s+(do\s+)?(tess|tessai)', 'listar_todos_agentes'),
+            (r'(mostrar?|exibir?|listar?|ver?)\s+(todos\s+)?(os\s+)?(agentes?|templates?|modelos?)\s+(do\s+)?(agno|tessai)', 'listar_todos_agentes'),
             
             # Listar apenas agentes de chat
-            (r'(mostrar?|exibir?|listar?|ver?|filtrar?)\s+(os\s+)?agentes?\s+(do\s+)?(tipo\s+)?chat(\s+(do|da|no|na)\s+(tess|tessai))?', 'listar_agentes_chat'),
+            (r'(mostrar?|exibir?|listar?|ver?|filtrar?)\s+(os\s+)?agentes?\s+(do\s+)?(tipo\s+)?chat(\s+(do|da|no|na)\s+(agno|tessai))?', 'listar_agentes_chat'),
             
             # Novo: Testar API TESS para listar agentes
-            (r'(testar?|usar?|executar?)\s+(a\s+)?api\s+(do\s+)?tess(\s+para)?\s+(listar|mostrar|exibir)\s+(os\s+)?(agentes?|templates?)', 'testar_api_listar_agentes'),
+            (r'(testar?|usar?|executar?)\s+(a\s+)?api\s+(do\s+)?agno(\s+para)?\s+(listar|mostrar|exibir)\s+(os\s+)?(agentes?|templates?)', 'testar_api_listar_agentes'),
             
             # Novo: Testar API TESS para listar agentes do tipo chat
-            (r'(testar?|usar?|executar?)\s+(a\s+)?api\s+(do\s+)?tess(\s+para)?\s+(listar|mostrar|exibir)\s+(os\s+)?agentes?\s+(do\s+)?(tipo\s+)?chat', 'testar_api_listar_agentes_chat'),
+            (r'(testar?|usar?|executar?)\s+(a\s+)?api\s+(do\s+)?agno(\s+para)?\s+(listar|mostrar|exibir)\s+(os\s+)?agentes?\s+(do\s+)?(tipo\s+)?chat', 'testar_api_listar_agentes_chat'),
             
             # Novo: Testar API TESS para executar agente específico
-            (r'(testar?|usar?|executar?)\s+(a\s+)?api\s+(do\s+)?tess\s+(?P<id>[a-zA-Z0-9_-]+)(\s+com\s+(mensagem|texto)\s+(?P<mensagem>[^$]+))', 'testar_api_executar_agente'),
+            (r'(testar?|usar?|executar?)\s+(a\s+)?api\s+(do\s+)?agno\s+(?P<id>[a-zA-Z0-9_-]+)(\s+com\s+(mensagem|texto)\s+(?P<mensagem>[^$]+))', 'testar_api_executar_agente'),
             
             # Novo: Comando abreviado para testar API
             (r'test_api_tess\s+(listar|executar)(\s+(?P<id>[a-zA-Z0-9_-]+))?(\s+(?P<mensagem>[^$]+))?', 'testar_api_tess'),
@@ -185,7 +185,7 @@ class MCPNLProcessor:
         # e enviamos para o processamento avançado com LLM se encontrarmos
         if self.usar_llm_para_tess:
             # Verificar se a mensagem contém termos relacionados ao TESS
-            termos_tess = ["tess", "agente", "agentes", "ferramentas", "mcp"]
+            termos_tess = ["agno", "agente", "agentes", "ferramentas", "mcp"]
             mensagem_lower = mensagem.lower()
             if any(termo in mensagem_lower for termo in termos_tess):
                 # Registrar no log
@@ -197,7 +197,7 @@ class MCPNLProcessor:
                     return tem_comando, tipo_comando, parametros
         
         # Detectar URLs TESS
-        if mensagem.startswith('@https://tess.pareto.io/'):
+        if mensagem.startswith('@https://agno.pareto.io/'):
             logging.info("Detectada URL TESS")
             slug, params = parse_tess_url(mensagem)
             if slug:
@@ -513,7 +513,7 @@ class MCPNLProcessor:
                 return "❌ ERRO: Chave API do TESS não encontrada nas variáveis de ambiente. Configure a variável TESS_API_KEY."
             
             # Configuração da requisição
-            url = 'https://tess.pareto.io/api/agents'
+            url = 'https://agno.pareto.io/api/agents'
             headers = {
                 'Authorization': f'Bearer {api_key}',
                 'Content-Type': 'application/json'
@@ -683,7 +683,7 @@ class MCPNLProcessor:
         # Para URLs, temos parâmetros específicos do modelo na URL
         if is_url and isinstance(params, dict):
             # Extrair modelo, ferramentas e temperatura da URL
-            modelo = params.get("model", "tess-5-pro")
+            modelo = params.get("model", "agno-5-pro")
             temperatura = params.get("temperature", "0.5")
             ferramentas = params.get("tools", "no-tools")
             
@@ -800,7 +800,7 @@ class MCPNLProcessor:
         dashboard_url = TESS_DASHBOARD_URLS.get(agent_id)
         web_option = ""
         if dashboard_url:
-            web_option = f"\n\n💻 **Prefere usar a interface web?**\nDigite 'abrir tess linkedin' para acessar o gerador diretamente no navegador."
+            web_option = f"\n\n💻 **Prefere usar a interface web?**\nDigite 'abrir agno linkedin' para acessar o gerador diretamente no navegador."
             
             # Se o comando específico para abrir a web for detectado
             if params.get('open_web'):
@@ -843,7 +843,7 @@ class MCPNLProcessor:
         dashboard_url = TESS_DASHBOARD_URLS.get(agent_id)
         web_option = ""
         if dashboard_url:
-            web_option = f"\n\n💻 **Prefere usar a interface web?**\nDigite 'abrir tess email' para acessar o gerador de email diretamente no navegador."
+            web_option = f"\n\n💻 **Prefere usar a interface web?**\nDigite 'abrir agno email' para acessar o gerador de email diretamente no navegador."
             
             # Se o comando específico para abrir a web for detectado
             if params.get('open_web'):
@@ -894,25 +894,25 @@ class MCPNLProcessor:
         ajuda = """# Comandos TESS AI disponíveis
 
 ## Agentes e Templates
-- **buscar agentes tess para <termo>** - Busca agentes por tema (email, linkedin, etc.)
+- **buscar agentes agno para <termo>** - Busca agentes por tema (email, linkedin, etc.)
 - **buscar agentes tipo chat** - Busca agentes do tipo chat
 - **buscar agentes tipo chat para <termo>** - Busca agentes do tipo chat com filtro adicional
-- **listar agentes do tess** - Mostra todos os agentes disponíveis
+- **listar agentes do agno** - Mostra todos os agentes disponíveis
 - **listar agentes chat** - Mostra apenas os agentes do tipo chat
-- **executar agente tess <id> com mensagem <texto>** - Executa um agente específico
+- **executar agente agno <id> com mensagem <texto>** - Executa um agente específico
 
 ## Comandos diretos
 - **transformar texto em post para linkedin: <texto>** - Cria um post otimizado para LinkedIn
 - **criar email de venda para: <produto>** - Gera um email persuasivo de vendas
 
 ## Interface Web
-- **abrir tess linkedin** - Abre a interface web do TESS para criar posts do LinkedIn
-- **abrir tess email** - Abre a interface web do TESS para criar emails de venda
+- **abrir agno linkedin** - Abre a interface web do TESS para criar posts do LinkedIn
+- **abrir agno email** - Abre a interface web do TESS para criar emails de venda
 
 ## Testes API TESS
-- **testar api tess para listar agentes** - Lista todos os agentes via API direta
-- **testar api tess para listar agentes chat** - Lista agentes de chat via API direta
-- **testar api tess <id> com mensagem <texto>** - Executa um agente específico via API direta
+- **testar api agno para listar agentes** - Lista todos os agentes via API direta
+- **testar api agno para listar agentes chat** - Lista agentes de chat via API direta
+- **testar api agno <id> com mensagem <texto>** - Executa um agente específico via API direta
 - **test_api_tess listar** - Versão abreviada para listar agentes
 - **test_api_tess chat** - Versão abreviada para listar agentes chat
 - **test_api_tess executar <id> <mensagem>** - Versão abreviada para executar agente
@@ -941,7 +941,7 @@ Use linguagem natural para interagir com os comandos. Experimente!"""
                 return "❌ ERRO: Chave API do TESS não encontrada nas variáveis de ambiente. Configure a variável TESS_API_KEY."
             
             # Configuração da requisição
-            url = 'https://tess.pareto.io/api/agents'
+            url = 'https://agno.pareto.io/api/agents'
             headers = {
                 'Authorization': f'Bearer {api_key}',
                 'Content-Type': 'application/json'
@@ -1020,19 +1020,19 @@ Use linguagem natural para interagir com os comandos. Experimente!"""
         
         # Mapear ações comuns para respostas específicas
         if 'post' in acao or 'linkedin' in acao:
-            return "Para criar um post para LinkedIn, você pode usar:\n\n'transformar texto em post para linkedin: seu texto aqui'\n\nOu então: 'executar agente tess transformar-texto-em-post-para-linkedin-mF37hV com mensagem seu texto aqui'"
+            return "Para criar um post para LinkedIn, você pode usar:\n\n'transformar texto em post para linkedin: seu texto aqui'\n\nOu então: 'executar agente agno transformar-texto-em-post-para-linkedin-mF37hV com mensagem seu texto aqui'"
         
         elif 'email' in acao or 'e-mail' in acao or 'venda' in acao:
-            return "Para criar um email de vendas, você pode usar:\n\n'criar email de venda para: nome do seu produto/serviço'\n\nOu então: 'executar agente tess e-mail-de-venda-Sxtjz8 com mensagem descrição do seu produto/serviço'"
+            return "Para criar um email de vendas, você pode usar:\n\n'criar email de venda para: nome do seu produto/serviço'\n\nOu então: 'executar agente agno e-mail-de-venda-Sxtjz8 com mensagem descrição do seu produto/serviço'"
         
         elif 'título' in acao or 'assunto' in acao or 'anúncio' in acao:
-            return "Para criar um título ou assunto de email para anúncio, você pode usar:\n\n'gerar título de email para anúncio: nome do recurso ou produto'\n\nOu então: 'executar agente tess titulo-de-email-para-anuncio-de-novo-recurso-fDba8a com mensagem nome do recurso'"
+            return "Para criar um título ou assunto de email para anúncio, você pode usar:\n\n'gerar título de email para anúncio: nome do recurso ou produto'\n\nOu então: 'executar agente agno titulo-de-email-para-anuncio-de-novo-recurso-fDba8a com mensagem nome do recurso'"
         
         elif 'agentes' in acao or 'modelos' in acao or 'templates' in acao:
-            return "Para ver todos os agentes disponíveis, digite:\n\n'listar agentes do tess'\n\nPara buscar agentes sobre um tema específico:\n'buscar agentes tess para: tema de interesse'"
+            return "Para ver todos os agentes disponíveis, digite:\n\n'listar agentes do agno'\n\nPara buscar agentes sobre um tema específico:\n'buscar agentes agno para: tema de interesse'"
         
         # Resposta genérica
-        return "Se você quer utilizar o TESS, veja as opções disponíveis com 'mostrar comandos' ou tente um destes formatos:\n\n1. 'transformar texto em post para linkedin: seu texto'\n2. 'criar email de venda para: seu produto'\n3. 'buscar agentes tess para: tema de interesse'"
+        return "Se você quer utilizar o TESS, veja as opções disponíveis com 'mostrar comandos' ou tente um destes formatos:\n\n1. 'transformar texto em post para linkedin: seu texto'\n2. 'criar email de venda para: seu produto'\n3. 'buscar agentes agno para: tema de interesse'"
     
     # Novos métodos para testar a API TESS
     

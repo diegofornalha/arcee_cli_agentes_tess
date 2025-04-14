@@ -29,7 +29,7 @@ Estes são os comandos mais simples e recomendados para uso no chat Arcee:
 | Comando | Descrição | Exemplo |
 |---------|-----------|---------|
 | `executar agente <id> com mensagem "<texto>"` | Executa um agente específico | `executar agente professional-dev-ai com mensagem "Como implementar um singleton em Python?"` |
-| `buscar agentes tess para <termo>` | Busca agentes por tema | `buscar agentes tess para email` |
+| `buscar agentes agno para <termo>` | Busca agentes por tema | `buscar agentes agno para email` |
 | `buscar agentes tipo chat para <termo>` | Busca agentes do tipo chat por tema | `buscar agentes tipo chat para linkedin` |
 | `transformar texto em post para linkedin: <texto>` | Atalho para criar um post para LinkedIn | `transformar texto em post para linkedin: Lançamento do produto X` |
 | `criar email de venda para: <produto>` | Atalho para gerar um email de vendas | `criar email de venda para: software de gestão` |

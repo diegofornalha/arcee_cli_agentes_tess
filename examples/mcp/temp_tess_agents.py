@@ -5,7 +5,7 @@ import requests
 api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyXzEyMzQ1Njc4OTAiLCJpYXQiOjE3MTUxMDU5MzAsImV4cCI6MTcxNTcxMDczMH0.aBcDeFgHiJkLmNoPqRsTuVwXyZ"
 
 # URL para a API TESS - listar agentes com paginação
-url = "https://tess.pareto.io/api/agents?page=1&per_page=10"
+url = "https://agno.pareto.io/api/agents?page=1&per_page=10"
 
 # Configuração de headers com autenticação Bearer
 headers = {

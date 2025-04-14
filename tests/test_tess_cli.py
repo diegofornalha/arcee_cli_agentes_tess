@@ -19,7 +19,7 @@ def main():
         sys.exit(1)
     
     print("\n=== Testando listagem de agentes ===")
-    subprocess.run(["python", "-m", "arcee_cli", "tess", "listar-agentes"], check=False)
+    subprocess.run(["python", "-m", "arcee_cli", "agno", "listar-agentes"], check=False)
     
     # Verificar se recebemos o ID do agente como argumento
     if len(sys.argv) < 2:
@@ -28,10 +28,10 @@ def main():
     
     agent_id = sys.argv[1]
     print(f"\n=== Testando detalhes do agente {agent_id} ===")
-    subprocess.run(["python", "-m", "arcee_cli", "tess", "detalhes-agente", agent_id], check=False)
+    subprocess.run(["python", "-m", "arcee_cli", "agno", "detalhes-agente", agent_id], check=False)
     
     print(f"\n=== Testando chat com o agente {agent_id} ===")
-    subprocess.run(["python", "-m", "arcee_cli", "tess-chat", agent_id], check=False)
+    subprocess.run(["python", "-m", "arcee_cli", "agno-chat", agent_id], check=False)
 
 if __name__ == "__main__":
     main() 

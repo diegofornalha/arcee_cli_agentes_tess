@@ -4,7 +4,7 @@ services:
   # Backend Rust (TESS-MCP)
   rust-backend:
     build:
-      context: ../mcp-server-tess-xtp
+      context: ../mcp-server-agno-xtp
       dockerfile: Dockerfile
     ports:
       - "3000:3000"

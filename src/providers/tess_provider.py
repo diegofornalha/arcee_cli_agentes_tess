@@ -18,7 +18,7 @@ class TessProvider:
     def __init__(self):
         """Inicializa o provedor TESS com a API key do ambiente."""
         self.api_key = os.getenv("TESS_API_KEY")
-        self.api_url = os.getenv("TESS_API_URL", "https://tess.pareto.io/api")
+        self.api_url = os.getenv("TESS_API_URL", "https://agno.pareto.io/api")
         self.local_server_url = os.getenv("TESS_LOCAL_SERVER_URL", "http://localhost:3000")
         self.use_local_server = os.getenv("USE_LOCAL_TESS", "True").lower() in ("true", "1", "t")
         
@@ -67,7 +67,7 @@ class TessProvider:
             # Servidor local não tem função de listagem, retornamos um agente simulado
             logger.debug("Usando servidor local - retornando agente simulado")
             return [{
-                "id": "local-tess",
+                "id": "local-agno",
                 "name": "Assistente TESS Local",
                 "description": "Assistente local para conversa e consultas"
             }]
@@ -92,7 +92,7 @@ class TessProvider:
             # Servidor local não tem função de detalhes, retornamos um agente simulado
             logger.debug("Usando servidor local - retornando detalhes simulados")
             return {
-                "id": "local-tess",
+                "id": "local-agno",
                 "name": "Assistente TESS Local",
                 "description": "Assistente local para conversa e consultas",
                 "questions": []

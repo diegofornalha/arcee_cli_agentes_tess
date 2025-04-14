@@ -8,4 +8,4 @@ Este módulo fornece a implementação de gerenciamento de tarefas no estilo kan
 com quadros, listas e cartões.
 """
 
-from arcee_cli.domain.tess.tess_api import TessAPI 
+from arcee_cli.domain.agno.tess_api import TessAPI 

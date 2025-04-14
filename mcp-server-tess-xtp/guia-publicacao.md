@@ -60,8 +60,8 @@ export XTP_TOKEN=xtp0_AZXRKn90dEmxthgTLM5EwvTuX-rzoZjD7O85UpdlYsN2BFyJRCihkw
 ### Clonando o repositório (se ainda não tiver feito)
 
 ```bash
-git clone https://github.com/diegofornalha/mcp-server-tess-xtp.git
-cd mcp-server-tess-xtp
+git clone https://github.com/diegofornalha/mcp-server-agno-xtp.git
+cd mcp-server-agno-xtp
 ```
 
 ### Instalando dependências
@@ -146,7 +146,7 @@ Este comando utiliza as configurações do arquivo `xtp.toml` para publicar o pl
 Para verificar se o plugin foi publicado corretamente:
 
 ```bash
-xtp plugin view --name 'mcp-server-tess' --extension-point ext_01je4jj1tteaktf0zd0anm8854
+xtp plugin view --name 'mcp-server-agno' --extension-point ext_01je4jj1tteaktf0zd0anm8854
 ```
 
 ## 7. Atualização do plugin
@@ -195,13 +195,13 @@ https://www.mcp.run/api/runs/USERNAME/PROFILE/TASK?nonce=XXXXX&sig=XXXXX
 Exemplo prático:
 
 ```
-https://www.mcp.run/api/runs/diegofornalha/tess/tass?nonce=Zg8Cysug6snMTd20qWE8KA&sig=kq4EXU6dtydmIpyO7KjhDOmGckG77XHG__t9POLvs3k
+https://www.mcp.run/api/runs/diegofornalha/agno/tass?nonce=Zg8Cysug6snMTd20qWE8KA&sig=kq4EXU6dtydmIpyO7KjhDOmGckG77XHG__t9POLvs3k
 ```
 
 Uso com curl:
 
 ```bash
-curl -X POST "https://www.mcp.run/api/runs/diegofornalha/tess/tass?nonce=Zg8Cysug6snMTd20qWE8KA&sig=kq4EXU6dtydmIpyO7KjhDOmGckG77XHG__t9POLvs3k" \
+curl -X POST "https://www.mcp.run/api/runs/diegofornalha/agno/tass?nonce=Zg8Cysug6snMTd20qWE8KA&sig=kq4EXU6dtydmIpyO7KjhDOmGckG77XHG__t9POLvs3k" \
   -H "Content-Type: application/json" \
   -d '{"input": "Listar todos os agentes disponíveis"}'
 ```
@@ -213,7 +213,7 @@ O MCP.run permite criar tarefas personalizadas que utilizam as ferramentas do se
 ### 9.1 Criando uma nova tarefa
 
 1. Acesse o painel do MCP.run: https://www.mcp.run/settings/
-2. Navegue até "Tasks" em seu perfil (ex: diegofornalha/tess)
+2. Navegue até "Tasks" em seu perfil (ex: diegofornalha/agno)
 3. Clique em "New Task" para criar uma tarefa
 
 ### 9.2 Configurando o prompt da tarefa
@@ -233,8 +233,8 @@ Use as ferramentas da API TESS para realizar essas tarefas e responda sempre em 
 
 Após configurar a tarefa, você pode acessá-la através de:
 
-1. **Interface web**: https://www.mcp.run/settings/tasks/diegofornalha/tess/NOME_DA_TAREFA
-2. **API REST**: https://www.mcp.run/api/runs/diegofornalha/tess/NOME_DA_TAREFA?nonce=XXX&sig=XXX
+1. **Interface web**: https://www.mcp.run/settings/tasks/diegofornalha/agno/NOME_DA_TAREFA
+2. **API REST**: https://www.mcp.run/api/runs/diegofornalha/agno/NOME_DA_TAREFA?nonce=XXX&sig=XXX
 3. **Cliente SSE**: Através da URL SSE do seu perfil
 
 ## 10. Integração com Arcee CLI
@@ -270,10 +270,10 @@ Você pode integrar as ferramentas TESS ao seu Arcee CLI para uso direto em apli
 Após a integração, você pode usar comandos como:
 
 ```
-/tess.listar_agentes page=1 per_page=10
-/tess.obter_agente agent_id=42
-/tess.executar_agente agent_id=42 model="tess-ai-light"
-/tess.help
+/agno.listar_agentes page=1 per_page=10
+/agno.obter_agente agent_id=42
+/agno.executar_agente agent_id=42 model="agno-ai-light"
+/agno.help
 ```
 
 ## 11. Entendendo o SSE (Server-Sent Events)
@@ -342,8 +342,8 @@ Este cliente gerencia:
 ## 13. Recursos adicionais
 
 - [Documentação do XTP](https://xtp.dylibso.com/docs)
-- [Repositório GitHub do plugin](https://github.com/diegofornalha/mcp-server-tess-xtp)
-- [API TESS](https://tess.pareto.io/api)
+- [Repositório GitHub do plugin](https://github.com/diegofornalha/mcp-server-agno-xtp)
+- [API TESS](https://agno.pareto.io/api)
 - [MCP.run](https://www.mcp.run)
 - [Documentação MCP SSE](https://www.mcp.run/docs/sse)
 - [Repositório Arcee CLI](https://github.com/diegofornalha/arcee-cli)

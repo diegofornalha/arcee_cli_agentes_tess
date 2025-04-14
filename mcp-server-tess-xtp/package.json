@@ -1,5 +1,5 @@
 {
-  "name": "mcp-server-tess-xtp",
+  "name": "mcp-server-agno-xtp",
   "version": "1.0.0",
   "description": "Servidor TESS com suporte a MCP",
   "main": "server.js",

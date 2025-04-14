@@ -13,7 +13,7 @@ import sys
 import argparse
 import logging
 
-from arcee_cli.domain.tess.server import run_server
+from arcee_cli.domain.agno.server import run_server
 
 # Configuração do logger
 logging.basicConfig(
@@ -28,8 +28,8 @@ def parse_args():
     parser.add_argument('--host', default='0.0.0.0', help='Host para escutar (padrão: 0.0.0.0)')
     parser.add_argument('--port', type=int, default=5000, help='Porta para escutar (padrão: 5000)')
     parser.add_argument('--debug', action='store_true', help='Executa em modo de depuração')
-    parser.add_argument('--data-dir', default=os.path.expanduser('~/.tess'),
-                        help='Diretório para armazenar os dados (padrão: ~/.tess)')
+    parser.add_argument('--data-dir', default=os.path.expanduser('~/.agno'),
+                        help='Diretório para armazenar os dados (padrão: ~/.agno)')
     parser.add_argument('--api-key', help='Chave de API para autenticação (opcional)')
     
     return parser.parse_args()

@@ -30,10 +30,10 @@ fi
 
 # Testa listagem de agentes
 echo -e "\nListando agentes TESS..."
-npx mcpx run mcp-server-tess.listar_agentes_tess --json '{"page": 1, "per_page": 5}' --session "$MCP_SESSION_ID" 
+npx mcpx run mcp-server-agno.listar_agentes_tess --json '{"page": 1, "per_page": 5}' --session "$MCP_SESSION_ID" 
 
 # Testa listagem de arquivos
 echo -e "\nListando arquivos TESS..."
-npx mcpx run mcp-server-tess.listar_arquivos_tess --json '{"page": 1, "per_page": 5}' --session "$MCP_SESSION_ID"
+npx mcpx run mcp-server-agno.listar_arquivos_tess --json '{"page": 1, "per_page": 5}' --session "$MCP_SESSION_ID"
 
 echo -e "\n✅ Teste concluído" 
